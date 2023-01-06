@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+from decouple import config
+from dj_database_url import parse as dburl
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -75,16 +77,20 @@ WSGI_APPLICATION = 'alurareceita.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
+default_dburl = 'sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'alura_receita',
-        'USER': 'postgres',
-        'PASSWORD': '123456',
-        'HOST': 'localhost'
-    }
-}
+DATABASES = {'default': config(
+    'DATABASE_URL', default=default_dburl, cast=dburl), }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'alura_receita',
+#         'USER': 'postgres',
+#         'PASSWORD': '123456',
+#         'HOST': 'localhost'
+#     }
+# }
 
 
 # Password validation
@@ -132,3 +138,5 @@ STATICFILES_DIRS = [
 # Media
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
